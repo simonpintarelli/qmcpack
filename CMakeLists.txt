@@ -83,7 +83,7 @@ IF( NOT QMC_NO_SLOW_CUSTOM_TESTING_COMMANDS )
     MESSAGE( STATUS "Unable to import PySCF python module. PySCF tests will not be run." )
   ELSE()
     MESSAGE( STATUS "Successfully imported PySCF python module." )
-  ENDIF() 
+  ENDIF()
 ENDIF()
 
 ######################################################################
@@ -342,30 +342,30 @@ ELSE(CMAKE_TOOLCHAIN_FILE)
                     "Please use cc/CC as the C/C++ compiler to ensure correct cross-compiling for the compute nodes "
                     "unless you understand cross-compiling and intend not to use Cray compiler wrappers.")
   ENDIF()
-  IF(CMAKE_SYSTEM_NAME STREQUAL "CrayLinuxEnvironment")
-    MESSAGE(STATUS "Running on a Cray machine.")
+  # IF(CMAKE_SYSTEM_NAME STREQUAL "CrayLinuxEnvironment")
+  MESSAGE(STATUS "Running on a Cray machine.")
 
-    IF(NOT $ENV{CRAYPE_LINK_TYPE} STREQUAL "dynamic")
-      MESSAGE(WARNING "Cray Programming Environment uses static linking by default. "
-                      "We prefer dynamic linking which makes library searching easier. "
-                      "Set environment variable CRAYPE_LINK_TYPE to \"dynamic\" enables dynamic linking.\n")
-    ENDIF()
-
-    IF ( NOT DEFINED MPIEXEC_EXECUTABLE )
-      FIND_PROGRAM(MPIEXEC_EXECUTABLE aprun)
-      IF(NOT MPIEXEC_EXECUTABLE)
-        # For slurm use srun
-        FIND_PROGRAM(MPIEXEC_EXECUTABLE srun)
-      ENDIF(NOT MPIEXEC_EXECUTABLE)
-    ENDIF()
-  ELSE()
-    # IF($ENV{CRAYPE_VERSION} MATCHES "." AND BASE_CXX_COMPILER_NAME STREQUAL "CC")
-    #   MESSAGE(FATAL_ERROR "Cray compiler wrapper detected. Empty the build folder and rerun cmake with -DCMAKE_SYSTEM_NAME=CrayLinuxEnvironment added.")
-    # ENDIF()
+  IF(NOT $ENV{CRAYPE_LINK_TYPE} STREQUAL "dynamic")
+    MESSAGE(WARNING "Cray Programming Environment uses static linking by default. "
+      "We prefer dynamic linking which makes library searching easier. "
+      "Set environment variable CRAYPE_LINK_TYPE to \"dynamic\" enables dynamic linking.\n")
   ENDIF()
 
-  #------------------------------------
-  # Identify the compiler -- This serves only to deal with case where only C or CXX is set, refactor? 
+  IF ( NOT DEFINED MPIEXEC_EXECUTABLE )
+    FIND_PROGRAM(MPIEXEC_EXECUTABLE aprun)
+    IF(NOT MPIEXEC_EXECUTABLE)
+      # For slurm use srun
+      FIND_PROGRAM(MPIEXEC_EXECUTABLE srun)
+    ENDIF(NOT MPIEXEC_EXECUTABLE)
+  ENDIF()
+  # ELSE()
+  #   # IF($ENV{CRAYPE_VERSION} MATCHES "." AND BASE_CXX_COMPILER_NAME STREQUAL "CC")
+  #   #   MESSAGE(FATAL_ERROR "Cray compiler wrapper detected. Empty the build folder and rerun cmake with -DCMAKE_SYSTEM_NAME=CrayLinuxEnvironment added.")
+  #   # ENDIF()
+  # ENDIF()
+
+  # #------------------------------------
+  # Identify the compiler -- This serves only to deal with case where only C or CXX is set, refactor?
   #------------------------------------
   IF ( CMAKE_C_COMPILER_WORKS OR CMAKE_C_COMPILER_WORKS )
     IF( (CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR ( CMAKE_C_COMPILER_ID MATCHES "GNU") )
@@ -890,7 +890,7 @@ IF( NOT "${ENABLE_SANITIZER}" STREQUAL "none")
   IF( NOT ${COMPILER} MATCHES "GNU" AND NOT ${COMPILER} MATCHES "Clang")
     MESSAGE(FATAL_ERROR "-DENABLE_SANITIZER=${ENABLE_SANITIZER} only works with GNU or Clang compilers")
   ENDIF()
-  
+
   IF( "${ENABLE_SANITIZER}" STREQUAL "asan" )
     SET(CMAKE_CXX_FLAGS_SAN "-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer"
         CACHE STRING "AddressSanitizer C++ compiler builds." FORCE)
@@ -904,9 +904,9 @@ IF( NOT "${ENABLE_SANITIZER}" STREQUAL "none")
     SET(CMAKE_CXX_FLAGS_SAN "-fsanitize=thread"
         CACHE STRING "ThreadSanitizer C++ compiler builds." FORCE)
   ENDIF()
-  
+
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_SAN}")
-  
+
 ENDIF()
 
 ############################################################
